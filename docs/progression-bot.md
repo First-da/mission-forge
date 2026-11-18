@@ -13,9 +13,10 @@ repository and approve the organization's permission update.
 
 ## Mentor authorization
 
-Mentor eligibility comes from the active membership of
-[processmission-intern/mentors](https://github.com/orgs/processmission-intern/teams/mentors).
-The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
+Mentor eligibility starts at L3: annual maintainers add contributors recorded
+at L3 or above to the Mentors Team, and only active membership of
+[missionhub-oss/mentors](https://github.com/orgs/missionhub-oss/teams/mentors)
+authorizes mentor commands. The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
 author's numeric GitHub ID, and active membership for every command. GitHub
 includes child-team members in this membership lookup. Pending invitations and
 non-members have no command authority. Lookup failures stop the operation.
@@ -27,7 +28,12 @@ remain additional requirements for their respective operations. L0 → L1
 uses merged registration evidence and does not require Team membership.
 
 The `mentors` entries in annual `governance.json` record GitHub identities and
-authorized DCO signature strings for patch verification. They do not grant
+authorized DCO signature strings using each mentor's real full name in English
+and personally confirmed sign-off email for the mentor section and optional
+patch signatures. For a Chinese
+name, use the full Pinyin spelling of the mentor's real name. Normally capitalize
+the first letter of each name part; an uppercase family name is also acceptable.
+They do not grant
 Mentor eligibility. Mentor configuration and settlement require the mentor's
 DCO metadata. A Team member can validate their assigned task and endorse
 another contributor under the task and annual authorization rules.
@@ -49,8 +55,9 @@ actual merged PRs.
 ## Task commands
 
 Use GitHub Assignees to assign a task to exactly one registered contributor.
-Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
-four-digit year label, such as `2026`. The year must have published rules.
+Set the native GitHub Issue Type to `Task`, apply one difficulty label from
+`difficulty/level0` through `difficulty/level4`, and one four-digit year label,
+such as `2026`. The year must have published rules.
 These native fields determine the participant, difficulty and annual rules.
 For new tasks the selected year must be the current Beijing calendar year or
 a future year at the command timestamp. Published rules and labels must exist.
@@ -73,7 +80,8 @@ Mentor configuration requires a task issue, an authorized maintainer and a
 registered active Mentor Team member with one mentor entry in the command year's
 `programs/<year>/governance.json`. The bot matches `mentors[].github_id` to the
 verified GitHub ID and reads `signoffs` from the current default-branch commit.
-Each entry contains `Name <email>`; the bot displays every registered entry
+Each entry contains `Mentor Real Full Name <email>`, confirmed by that mentor;
+the bot displays every registered entry
 with a `Signed-off-by:` prefix in a copyable code block. Missing or duplicate
 mentor entries, empty signature lists and multiline signatures stop configuration
 with an explanatory error.
@@ -85,22 +93,24 @@ immutable command as authorization evidence. Multiple mentors can be added
 through separate commands. Numeric GitHub IDs identify unique mentors, so
 repeated commands preserve the original evidence and other mentors while
 refreshing registered details. An identical body skips the issue update.
-Acceptance and settlement verify every displayed mentor against their command,
+A stored command link keeps the repository name it was written under. After a
+repository rename, `npm run relink:mentors -- --write` rewrites those hidden
+links to the current repository; a run without `--write` reports the affected
+issues without changing them.
+Settlement verifies every displayed mentor against their command,
 resolve the contributor from the single Assignee and require independent mentors.
 
 Reprocessing the original configuration command, including scheduled
 reconciliation, fills in or refreshes its DCO from the registered metadata.
 Existing account-only mentor sections remain valid authorization evidence.
-Sections that display DCO must match the registered signatures during acceptance
-and settlement. Publishing uses the same verified signatures as the proposal
+Sections that display DCO must match the registered signatures during
+settlement. Publishing uses the same verified signatures as the proposal
 and preserves edits to other issue fields made while validation runs.
 
 | Command after `@mfcp-progress` | Authorization |
 | --- | --- |
 | `configure assignee @username` | Active Mentor Team member; target must be registered and participating in this issue |
 | `configure mentor @username` | Annual maintainer and active Mentor Team member |
-| `accept reproduction evidence-url ...` | Any configured independent active mentor |
-| `accept validation evidence-url ...` | Any configured independent active mentor, after reproduction acceptance |
 | `settle upstream-pr-url ...` | Annual maintainer and active Mentor Team member |
 | `endorse @candidate L3` or `endorse @candidate L4` | Independent Mentor Team member |
 | `interview @candidate L3 evidence-url` | Independent annual interviewer and Mentor Team member |
@@ -116,7 +126,7 @@ this repository. Edited command comments are rejected. Quoted or fenced
 examples do not execute. Links use HTTPS and may include comment anchors.
 
 See [完整命令示例](bot-command-examples.md) for copyable comment templates,
-native task assignment, acceptance, settlement and L3/L4 review examples.
+native task assignment, settlement and L3/L4 review examples.
 
 The bot adds 👀 to the original command while processing or awaiting conditions.
 Completed operations replace it with 👍. Failures remove the processing reaction
@@ -133,46 +143,89 @@ Moderation identifies trusted feedback by App ID, or by the configured numeric
 bot user ID when GitHub omits App metadata. An explicitly different App ID is
 rejected. Other bots remain subject to registration checks.
 
-Accept reproduction before validation. After validation and upstream merge,
-post `settle` with the upstream PR URLs and close the issue as completed.
-An open issue keeps the settlement command as evidence without awarding XP.
-A maintainer must
-close the issue for automatic close-event settlement; a maintainer can also
-post a new settlement command after closure. Every upstream commit must be
-attributed to the participant and include the author's and authorized mentor's
-DCO sign-offs. The mentor signature must belong to the mentor who accepted the
-latest validation stage. Each upstream PR receives credit once among active settlements.
-The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
+After reviewing the deliverables and upstream merge, a maintainer posts
+`settle` with the upstream PR URLs. This command validates the evidence and
+records experience directly. After the validated record is published, the
+bot closes the issue as Completed. A task already closed as Completed can
+use the same command. A close event can retry an existing authorized settlement
+command; PR evidence must be supplied through `settle`.
+Every upstream commit must be
+attributed to the participant and include the author's DCO sign-off.
+Mentor patch sign-offs are optional for settlement. All signers use their own real full
+names in English. For a Chinese name, use the full Pinyin spelling of the real
+name. Normally capitalize the first letter of each name part; an uppercase
+family name is also acceptable. The author's sign-off name and email
+must match the commit author.
+Settlement requires a configured, independent, active mentor whose authorization
+predates the settlement command. The first eligible mentor in configuration order
+is stored with the settlement, regardless of optional patch signatures.
+Each upstream PR receives credit once
+among active settlements. The active 2026.v7 rules accept GitHub PRs from the repositories listed in the
+[annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
+`humanfia/humanize`, `humanfia/flowverse`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`,
+`sashiko-dev/sashiko` and `processmission/qemu`. Humanize tasks use `project/humanize`;
+openRuyi and Sashiko tasks use `project/linux`; QEMU tasks use `project/qemu`.
+QEMU PRs target the downstream repository's default branch, currently `devel`.
+Upstream QEMU patch reviews use `qemu-devel@nongnu.org`; public mailing-list
+threads and merged commits serve as task evidence. Automatic settlement accepts
+GitHub PR URLs from the annual repository list. Task
+settlement verifies the repository against the immutable rule version recorded
+in the task contract, along with author DCO evidence and mentor authorization.
 
-First reproduction acceptance records the native Assignee, mentor command
-proofs, difficulty and annual rule version in the contributor JSON. The
+First settlement records the native Assignee, mentor command proofs,
+difficulty and the rule version effective at the command timestamp. The
 `mentors` array stores each unique mentor ID and authorization proof. Existing
 records without that array use their original `mentor_id` and `configuration`.
-The original fields remain unchanged, and further stage acceptance records
-additional authorized mentors. Any configured independent mentor may accept a
-stage after their configuration command. Acceptance and settlement revalidate
-all recorded authorizations and current Team membership.
-Acceptance and settlement require these issue fields to remain consistent with
+Existing contracts retain their original policy, authorizations and stage history.
+Settlement revalidates all recorded authorizations and current Team membership.
+Settlement requires these issue fields to remain consistent with
 the recorded task. Label or Assignee edits do not rewrite contribution history.
 Correct accidental changes before continuing; use a separate issue for a new
 independent assignment or delivery scope.
 
 Reopening a credited task creates a reversal PR. Experience is deducted only
-when the PR merges. A fresh mentor validation after the reversal merge is
-required before another settlement. L3/L4 promotions and all changes for
+when the PR merges. A new settlement command after the reversal merge is
+required before another settlement. Commands older than a reopen event cannot
+settle or automatically close the reopened task. Pending reversals block settlement.
+If automatic closure fails after publication, reconciliation retries closure
+against the recorded settlement without awarding points again.
+L3/L4 promotions and all changes for
 contributors already at L3/L4 use reviewed PRs. Reviews must approve the
 current PR revision, come from authorized people, and be independent of the
 participant. The bot enables auto-merge after these conditions pass.
+
+Maintainers may record a recognition without a command: a maintainer-authored
+participant PR appends `recognitions` and promotions, and every new proof points
+at a public maintainer comment stating the recognition decision. The integrity
+check verifies the comment author, timestamp and digest, and rejects any change
+to settlements, adjustments or the last event. Recognised points count towards
+experience, and later settlements preserve the recognition records.
+
+## Stale tasks
+
+A task that has had no Assignee for more than thirty days after it was
+created is closed as not planned, with one comment naming its creation date
+and age. The check runs once a day. A task with an Assignee stays open, and a
+closed task can be reopened by commenting on it.
 
 ## Workflow and branch controls
 
 - `Registration`: JSON and GitHub identity checks for participant PRs.
 - `Progression integrity`: validates source evidence, authorization and
   immutable annual rules using trusted default-branch code.
-- `Automatic progression checks`: validates candidate commits before main
-  can advance. All three required check names run under GitHub Actions.
-- `Contributor progression`: serializes writes and reconciles every ten minutes.
-- `Contributor notifications`: serializes congratulations and retries hourly.
+- `Automatic progression checks`: validates each candidate once before main
+  can advance. The three required check names report the result of that shared
+  verification under GitHub Actions, including its failure or cancellation.
+- `Contributor progression`: serializes writes and reconciles updated records
+  and pending sources every ten minutes.
+- `Close stale tasks`: closes unassigned Task issues older than thirty days,
+  once a day.
+- `Contributor notifications`: serializes congratulations after record updates
+  and issue closure, and retries hourly. Participant records come from the
+  checked-out default-branch commit, read through Git without per-file API
+  requests. The run reports that commit; later changes are processed by a
+  subsequent run. Task completion is announced before a
+  related L2 promotion, with separate notification keys preventing duplicates.
 - `MFCP website`: validates records, tests, builds and deploys the bilingual
   GitHub Pages website after every push to `main`, including published level
   and contribution updates. See [website behavior](website.md).
@@ -189,12 +242,48 @@ files or validation scripts. Runtime changes execute after reviewed merge to mai
 The public-repository approval setting still applies to any future workflow
 that uses `pull_request` to execute contributor-supplied code.
 
-After main changes and on a ten-minute schedule, `Refresh open PR checks` verifies every open PR again and
-publishes the three required results and repository check on its actual head commit. This trusted
+After main changes and on a ten-minute schedule, `Refresh open PR checks` reads
+open PR update times and their current checks. It reuses confirmed successful
+checks when the update time, head, base, title, author and trusted validator
+revision match. Missing, failed, replaced or pending checks remain eligible for
+validation. Maintainer permissions and applicable review approvals are checked
+again before reuse; bot-authored progression proposals receive full evidence
+verification. Required results are published on the actual head commit. This trusted
 workflow has Checks write permission to report results; it executes no PR code
 and receives no App private key. Existing PRs also receive current validation
 without contributors reopening or updating them. Review approvals are read by
 these default-branch scheduled workflows. GitHub may delay scheduled runs.
+
+## Incremental processing
+
+The notification, PR refresh and progression workflows each restore a separate
+processing state through GitHub Actions Cache. Serialized runs save confirmed
+progress even when a later operation fails. A cache miss reads the authoritative
+GitHub records to establish the state again.
+
+Notification receipts use the existing stable achievement key and the confirmed
+bot comment URL. Already delivered achievements skip comment queries, and a run
+with no pending notices exits before creating an App token. Unsent notices remain
+eligible on the next run. Task completion still precedes its related promotion.
+
+Progression reconciliation queries repository issues and PRs updated since its
+saved start time, with a one-minute overlap. Completed registration PRs come from
+the committed contributor records. Immutable command comments with a confirmed
+bot success reaction establish receipts on the first scan. Failed sources and
+sources waiting for review are stored separately and retried even when their
+update time falls outside the window. Changes to trusted scripts or program
+rules reset the scan and command receipts. `--full-scan` requests a complete scan.
+Every new write still validates the current source evidence and authorization.
+
+GitHub data addressed by a complete commit SHA is reused within a process.
+Mutable issue state, references, permissions and membership lookups remain live.
+When GitHub reports an API rate limit, processing stops and retains unfinished
+sources for a subsequent run.
+
+Run summaries include `api.total` and HTTP method counts for REST calls made by
+the repository client. PR refresh totals also include the proposed-input child
+process under `api.child_requests`. App token creation, Git transport and Actions
+cache storage requests are outside these application REST counters.
 
 Main requires `JSON format and fields`, `validate` and `Progression integrity`
 from GitHub Actions. PR authors do not need to update their branch after every

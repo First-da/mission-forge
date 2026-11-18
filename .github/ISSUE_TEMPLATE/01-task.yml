@@ -1,12 +1,13 @@
 name: Task proposal / 实践任务提议
 description: Propose an open-source practice task / 提出开源实践任务
 title: "[Task] "
-labels: ["kind/task", "2026"]
+labels: ["2026"]
+type: Task
 body:
   - type: markdown
     attributes:
       value: |
-        Register through a merged PR first: https://github.com/processmission-intern/mission-forge/blob/main/participants/README.md
+        Register through a merged PR first: https://github.com/missionhub-oss/mfcp/blob/main/participants/README.md
         请先完成注册 PR 并等待合并，未注册账号的 Issue 会自动关闭。
         Please search existing issues first. To claim a published task, comment on that task.
         请先搜索已有 Issue。申领已发布任务时，请在原任务下发表评论。
@@ -16,11 +17,14 @@ body:
     id: project
     attributes:
       label: Project / 实践项目
+      description: Select Linux for openRuyi tasks / openRuyi 任务选择 Linux
       multiple: true
       options:
         - Zephyr
         - Linux
         - Yocto Project
+        - Humanize
+        - QEMU
     validations:
       required: true
   - type: dropdown

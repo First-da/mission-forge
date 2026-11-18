@@ -7,9 +7,12 @@ The English and Chinese READMEs share these named project illustrations:
 | [zephyr.png](zephyr.png) | Zephyr development board with a project title |
 | [linux.png](linux.png) | Linux kernel development |
 | [yocto.png](yocto.png) | Yocto Project mountain landscape and embedded computer |
+| [humanize.png](humanize.png) | Humanize coding, review and verification workflow |
+| [qemu.png](qemu.png) | QEMU system emulation with a virtual development board and peripherals |
 
-Created with the built-in image generation tool on 2026-10-21. These images
-illustrate learning topics and contain no official project logos.
+Created with the built-in image generation tool: Zephyr, Linux and Yocto Project
+on 2026-10-21; Humanize on 2026-10-30; QEMU on 2026-11-06. These images illustrate learning topics
+and contain no official project logos.
 
 ## References and prompts
 
@@ -54,3 +57,47 @@ Both illustrations also use the project's soft 3D artwork as a style reference.
 > harmoniously integrated and smaller than the landscape. Restrained blue and
 > teal palette. Polished soft illustrated rendering, 3:2 landscape, generous
 > breathing room. No other text, no official logo, no watermark.
+
+### Humanize
+
+The [official Humanize overview](https://humanfia.ai/projects/humanize) supplies
+the coding, review and verification theme. The illustration shares the existing
+project cards' soft 3D style and 3:2 landscape proportions.
+
+> Use case: stylized-concept. Asset type: project illustration for an open-source
+> contributor program README, matching a series of polished soft 3D editorial
+> project cards. Create a landscape 3:2 image, 1536 by 1024 pixels. Pale ivory
+> studio background, soft diffuse lighting, gentle realistic shadows, restrained
+> teal, sage and lime-green accents, dark navy details. In the lower-right and
+> center, show a compact sculpted terminal console with two translucent rounded
+> software panels: one contains abstract code lines, the other contains review
+> marks. A small verification tile with a checkmark sits nearby, connected by a
+> subtle curved translucent ribbon suggesting coordinated coding agents. Keep
+> the subject cohesive and spacious, like a premium product illustration, not a
+> technical diagram. Add the exact title "Humanize" in large bold clean dark-navy
+> sans-serif type at the upper left, with generous 7% edge margins, clearly
+> readable at 400px image width. Keep the illustration clear of the title. No
+> other readable text, no official logos, no mascots, no watermark. Opaque
+> background.
+
+### QEMU
+
+The [Process Mission QEMU repository](https://github.com/processmission/qemu)
+supplies the board and SoC modeling theme. The illustration uses the same
+soft 3D style and 3:2 landscape proportions as the other project cards.
+
+> Use case: stylized-concept. Asset type: editorial project illustration for an
+> open-source contributor program README, matching a series of soft 3D editorial
+> project cards. Create one new landscape 3:2 bitmap image, 1536 by 1024 pixels.
+> Pale ivory studio background, soft diffuse lighting, gentle realistic shadows,
+> restrained warm orange and muted blue accents, dark navy details. In the
+> lower-right and center show a small sculpted computer displaying a simple
+> miniature virtual development board inside its screen, with a few neatly
+> arranged processor and peripheral components beside the computer. Convey
+> system emulation and board/SoC modeling as a cohesive premium product
+> illustration. This is illustrative artwork, not a diagram: no arrows, no
+> labeled architecture, no flowchart. Place the exact title "QEMU" in large bold
+> clean dark-navy sans-serif type at the upper left, with generous 7% edge margins,
+> readable at 400px image width. Keep the illustration clear of the title. No
+> other readable text, no official logos, no mascots, no watermark. Opaque
+> background.

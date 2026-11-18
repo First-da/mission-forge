@@ -9,6 +9,8 @@ import {load} from 'cheerio';
 import {buildPages} from '../scripts/build-pages.mjs';
 import {normalizeProfile, totals} from '../scripts/lib/profile.mjs';
 import {loadTaskIssues} from '../scripts/lib/task-stats.mjs';
+import {loadCommunity} from '../scripts/lib/community.mjs';
+import {loadEvents} from '../scripts/lib/events.mjs';
 
 test('trusted site rendering publishes real records from a separate data directory', async () => {
   await mkdir('.mfcp-runtime', {recursive: true});
@@ -20,27 +22,53 @@ test('trusted site rendering publishes real records from a separate data directo
     const issues = await loadTaskIssues();
     const {html, program, output} = await buildPages(directory, {sha, issues});
     const $ = load(html);
+    const events = await loadEvents();
+    const eventPage = load(await readFile(join(output, 'events/index.html'), 'utf8'));
+    assert.equal(eventPage('.event-card').length, events.replays.length);
+    assert.deepEqual(eventPage('.event-title-link').map((_, element) => eventPage(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.deepEqual(eventPage('.event-slides').map((_, element) => eventPage(element).attr('href')).get(),
+      events.replays.filter(replay => replay.slides).map(replay => `../${replay.slides}`));
+    assert.equal(eventPage('h1').length, 1);
+    assert.equal(eventPage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/events/');
+    assert.equal(eventPage('#main-nav a[aria-current="page"]').attr('href'), '../events/');
+    assert.equal(eventPage('#main-nav a[href="../news/"]').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="events/"]').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="events/"]').attr('rel'), 'noopener noreferrer');
+    assert.equal($('#leaderboard').attr('aria-labelledby'), 'ranking-title');
+    assert.equal($('#events, [role="tablist"], [role="tabpanel"]').length, 0);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
-    assert.equal($('.contributor-card').length, profiles.length);
+    const rankedProfiles = profiles.filter(profile => profile.level < 4);
+    assert.equal($('.ranking-list>.contributor-card').length, rankedProfiles.length);
+    assert.equal($('.recognized-card').length, 0);
     assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
-    const tasks = issues.filter(issue => !issue.pull_request && issue.labels.some(label => label.name === 'kind/task'));
+    for (const profile of profiles.filter(profile => profile.level === 4)) {
+      assert.equal($(`#contributor-${profile.github_login.toLowerCase()}`).length, 0);
+    }
+    const tasks = issues.filter(issue => !issue.pull_request && issue.type?.name === 'Task');
     const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
     const completed = tasks.filter(issue => issue.state === 'closed' && issue.state_reason === 'completed');
     assert.equal(program.stats.tasks, tasks.length);
     assert.equal(program.stats.inProgressTasks, inProgress.length);
     assert.equal(program.stats.completedTasks, completed.length);
-    assert.deepEqual($('.stats-grid>div').map((_, element) => ({
-      label: $(element).find('[data-i18n]').text(), value: Number($(element).find('strong').text()),
+    const community = await loadCommunity();
+    assert.deepEqual($('.stats-grid>a').map((_, element) => ({
+      label: $(element).children('span').text(), value: Number($(element).find('strong').text()),
     })).get(), [
+      {label: '社群人数', value: community.members},
       {label: '贡献者', value: profiles.length},
       {label: '任务总数', value: tasks.length},
       {label: '进行中', value: inProgress.length},
-      {label: '已完成', value: completed.length},
+    ]);
+    assert.deepEqual($('.stats-grid>a').map((_, element) => $(element).attr('href')).get(), [
+      '#join',
+      '#leaderboard',
+      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask',
+      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask+is%3Aopen+assignee%3A*',
     ]);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
-    for (const profile of profiles) {
+    for (const profile of rankedProfiles) {
       const person = program.participants.find(item => item.id === profile.github_id);
       assert.deepEqual(person.stats, totals(profile));
       const card = $(`#contributor-${profile.github_login.toLowerCase()}`);
@@ -48,11 +76,13 @@ test('trusted site rendering publishes real records from a separate data directo
       assert.equal(card.attr('data-xp'), String(person.stats.experience));
       assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number($(element).text())).get(),
         [person.stats.experience, person.stats.tasks, person.stats.pull_requests]);
-      assert.equal(card.find('a[href]').last().attr('href'), person.recordUrl);
+      assert.equal(card.find('.rank-tasks strong').text(), String(person.stats.tasks));
+      assert.deepEqual(card.find('.profile-links a[href]').map((_, element) => $(element).attr('href')).get(),
+        [`https://ghfind.com/u/${person.login}`, person.githubUrl, person.recordUrl]);
       assert.ok(person.recordUrl.includes(`/blob/${sha}/participants/`));
       assert.equal(card.find('.rank-number').text(), String(person.rank));
       assert.equal(card.attr('value'), String(person.rank));
-      assert.equal(person.rank, 1 + program.participants.filter(other =>
+      assert.equal(person.rank, 1 + program.leaderboard.filter(other =>
         other.stats.experience > person.stats.experience).length);
       const threshold = profile.level === 1 ? program.rules.level2 : profile.level === 2 ? program.rules.level3 : null;
       assert.deepEqual(card.find('progress').map((_, element) => Number($(element).attr('max'))).get(),
@@ -70,12 +100,25 @@ test('trusted site rendering publishes real records from a separate data directo
         assert.equal(rendered, copy[key].zh, `Incorrect initial language: ${key}`);
       });
     }
+    const eventCopy = JSON.parse(eventPage('#page-data').text()).copy;
+    for (const element of eventPage('[data-i18n]').toArray()) {
+      const key = eventPage(element).attr('data-i18n');
+      assert.ok(eventCopy[key]?.en && eventCopy[key]?.zh, `Missing event translation: ${key}`);
+      assert.equal(eventPage(element).text(), eventCopy[key].zh);
+    }
+    for (const element of eventPage('.event-slides, script[src], link[rel="stylesheet"]').toArray()) {
+      const path = eventPage(element).attr('href') ?? eventPage(element).attr('src');
+      await access(join(output, 'events', path.split('?')[0]));
+    }
     $('a[href^="#"]').each((_, element) => {
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
     for (const name of ['app.mjs', 'site.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
+    }
+    for (const replay of events.replays.filter(replay => replay.slides)) {
+      assert.deepEqual(await readFile(join(output, replay.slides)), await readFile(replay.slides));
     }
     assert.equal(await readFile(join(output, 'index.html'), 'utf8'), html);
   } finally {

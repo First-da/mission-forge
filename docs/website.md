@@ -5,7 +5,8 @@
 
 The public website is built with `npm run build:pages` and deployed from
 `site-dist/` by `.github/workflows/pages.yml`. Pushes to `main` and manual
-workflow runs publish a new snapshot. Task issue changes also publish a new
+workflow runs publish a new snapshot. Changes to issues with the native GitHub
+Issue Type `Task` also publish a new
 snapshot, with an hourly refresh covering changes made by automation.
 The first visit uses Chinese; the language control remembers the visitor's
 English or Chinese preference.
@@ -23,6 +24,11 @@ English and Chinese interface copy, and `site/site.css` defines responsive
 layouts. `site/app.mjs` handles language, search and navigation.
 The main sections cover the program, one contributor leaderboard, partners
 and joining. Partners appear immediately after the leaderboard.
+The project section lists Zephyr, Linux, Yocto Project, Humanize and QEMU.
+On screens wider than 700 pixels, the first row contains Zephyr, Linux and
+Yocto Project, and the centered second row contains Humanize and QEMU. All
+project cards have the same width and spacing. Screens up to
+700 pixels use one column.
 Detailed metrics, milestones and progression requirements expand within each
 ranked entry. The footer contains one line of copyright and a GitHub link.
 
@@ -37,6 +43,8 @@ composition are informed by the supplied Humanfia website reference.
 The hero mark floats while its rings rotate and the glow pulses. Mouse input
 adds a small perspective tilt. Motion pauses outside the viewport and while
 the tab is hidden; the system's reduced-motion preference keeps it static.
+The mobile and tablet hero frames contain their decorative rings within the
+viewport.
 Sections and ranked entries reveal once on entering the viewport. Buttons,
 project arrows and rows use small hover transitions with the same motion
 preference. All content stays visible without JavaScript.
@@ -44,31 +52,138 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their original PNG files and transparency. The independent partner section
+their artwork and proportions. The partners wrap into rows of four;
+each incomplete row is centered with the same card widths and spacing.
+Renesas uses the supplied white transparent PNG;
+SiFli uses the supplied blue transparent PNG. Both link to their official
+websites. ReedPilot uses the supplied white transparent PNG, retaining its
+original pixels and alpha channel. Its image is centered within the logo frame
+to account for the transparent padding, and links to `https://www.reedpilot.com/`.
+Kubuds Technology uses the supplied white SVG artwork on a transparent
+background with a viewBox fitted to the mark, and links to `https://kubuds.io/`.
+Jiachen Project uses the supplied transparent SVG, displayed in white within
+the logo frame, and links to `https://rv2036.org/`.
+Canaan Developer Community uses the supplied transparent PNG, recolored from
+its navy ink to white so the artwork contrasts with the dark section, and links
+to `https://www.kendryte.com/`.
+dsh-TUI uses the standard pixel-whale frame from its
+[README logo](https://github.com/ccch1mneyyy/dsh-TUI/blob/52b50464f9b9ca101033bfb3751f8d9178b25bf1/docs/assets/readme/logo-en.svg),
+with the original path geometry, colors and MIT license. It links to
+`https://dshtui.com/`. DSH Go uses the supplied pastel emblem as a clean
+transparent PNG and links to `https://go.dshtui.com/`.
+SpacemiT uses the supplied transparent SVG with green artwork and white
+lettering, preserving its original viewBox and colors. It links to
+`https://www.spacemit.com/` and is labeled 进迭时空 in Chinese.
+The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
-Each logo keeps its original colors and transparent background directly
-within the dark section.
+The logos appear directly on the dark section with transparent backgrounds.
 The Gevico logo comes from the [QEMU Camp organization profile](https://github.com/qemu-camp)
 ([original image](https://raw.githubusercontent.com/qemu-camp/.github/main/profile/assets/gtoc-logo-horizontal.png));
 the HUST logo comes from the [QEMU Camp website](https://qemu.gevico.online/)
 ([original image](https://qemu.gevico.online/image/partners/hust.png)).
-Each logo links to its community and has a visible bilingual name.
+Each logo links to its community and has a visible name that follows the
+selected page language: official Chinese names on the Chinese page and
+English names on the English page. Brands without an official Chinese name
+keep their established spelling in both languages.
 Program, leaderboard and partner headings have a red background that expands
 from left to right when their section is hovered or contains keyboard focus.
 Touch layouts show the background directly; reduced motion disables the transition.
 
+## Events
+
+The header's Events link opens the independent `events/` page in a new
+browser tab. It includes the weekly schedule, all replay links, slides
+and the Bilibili collection from `site/events.md`. The page shares the
+website header, language control and mobile navigation. Local slide links
+resolve from the new page to the existing `slides/` directory. The homepage
+displays the contributor leaderboard directly; visits to its `#events`
+fragment navigate to the events page.
+
+## News articles
+
+The header's News link opens the independent `news/` page in a new browser
+tab. The news index and each article share the website header, language
+control and mobile navigation. Article text is authored in Chinese and
+keeps its language when the surrounding interface is switched to English.
+
+Write each article as `site/news/<slug>.md` with YAML front matter and a
+Markdown body. The filename uses lowercase letters, digits and hyphens.
+`gray-matter` reads the metadata, `marked` renders the body, and
+`sanitize-html` limits the published HTML to article content. Images use
+local paths under `site/assets/`; `image-size` supplies their dimensions.
+JavaScript front matter is rejected.
+
+| Field | Meaning |
+| --- | --- |
+| `title`, `summary` | Article title and index description |
+| `category` | `community` or `partner` |
+| `date` | Event or joining date, quoted as `YYYY-MM-DD` |
+| `published_at` | Publication date, quoted as `YYYY-MM-DD` |
+| `cover`, `cover_alt` | Local image path relative to the Markdown file and its alternative text |
+| `featured` | Select an article for the index's featured position |
+| `partner` | Partner CSS identifier for a partner article |
+| `joined_at` | Partner joining timestamp with an explicit timezone |
+| `source_commit` | Full commit SHA of the partner's first directory entry |
+
+Partner joining times use the committer timestamp of the first commit on
+the default branch that added the partner to `site/index.njk`. The article
+date is calculated in `Asia/Shanghai`. Commit references remain in the
+Markdown metadata for editorial verification.
+Publication dates record when the news text is published. This keeps the
+joining record distinct from the publication of a retrospective article.
+
+The build produces `site-dist/news/index.html` and
+`site-dist/news/<slug>/index.html`, sorting entries by event or joining
+time. It recreates the generated news directory on each build.
+Use relative image links such as
+`../assets/news/beijing-meetup-2026-11-14-1.webp`; the builder resolves them
+for the article URL. Place the title in front matter and use paragraphs
+or level-two headings in the body.
+
+The Beijing meetup article records the 2026-11-14 event, its expected
+attendance of 20 and actual attendance of 16, and the supplied photographs.
+Its visible participation note states that attendees joined as individual
+community members and their participation and remarks do not represent
+their employers or schools. Organization names describe personal work or
+study backgrounds.
+
 ## Published records and rankings
 
-The homepage shows Contributors, Total tasks, In progress and Completed.
+The homepage shows Community members, Contributors, Total tasks and In progress.
+Community members comes from the Feishu group's `user_count`.
+The trusted source file `site/community.json` contains only the count and its
+observation time. Refresh it using an authenticated local `lark-cli` session:
+
+```sh
+npm run refresh:community -- --chat-id <MFCP-chat-id>
+```
+
+The refresh command reads the group information API, validates the response
+and updates the snapshot after a successful request. Commit the snapshot to
+publish the refreshed count. Website builds use the most recent committed
+snapshot; Feishu credentials and member identities stay outside the website.
+
 Task statistics come from all pages of the repository's GitHub Issues API
-at build time. Total tasks counts every `kind/task` issue. In progress counts
-open task issues with at least one Assignee. Completed counts task issues
-closed with the `completed` reason. Each issue counts once, including when
+at build time, using the `type=Task` API filter. Total tasks counts every issue
+whose native GitHub Issue Type is `Task`. In progress counts
+open task issues with at least one Assignee. Each issue counts once, including when
 it has multiple Assignees. Pull requests and other issue kinds are excluded.
 The desktop layout has four columns; screens up to 700 pixels use two columns.
 
-Issue creation, deletion, transfer, edits, assignment changes, closure,
-reopening and label changes trigger a rebuild. The build uses the workflow's
+Task issue creation, deletion, transfer, edits, assignment changes, closure,
+reopening and label changes trigger a rebuild. Assigning an Assignee or removing
+an Assignee runs the same build and deployment workflow. Setting the native
+type to `Task` triggers a rebuild even when the issue was created without it.
+Removing the `Task` type triggers a rebuild using the removed type in the event
+payload, so the published count reflects the change. Other issue types skip
+event-driven builds. Pushes to `main`, manual runs and hourly refreshes remain
+available independently of issue type.
+
+The task issue template sets `type: Task`, and the repository's issue preparation
+script includes that field in its REST payload. After creation, verify that
+GitHub returned `type.name: Task`; setting it requires repository push access,
+and GitHub can silently omit it for other callers. A maintainer can set the
+type afterward to trigger publication. The build uses the workflow's
 GitHub token with read access to issues. Local builds can use `GITHUB_TOKEN`
 or the public API without authentication. GitHub request or response validation
 failures stop the build and preserve the previously published snapshot.

@@ -11,12 +11,14 @@
   <a href="projects/zephyr/README.md"><img src="https://img.shields.io/badge/Zephyr-7A51C2?style=flat-square" alt="Explore Zephyr"></a>
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="Explore Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="Explore Yocto"></a>
+  <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="Explore Humanize"></a>
+  <a href="projects/qemu/README.md"><img src="https://img.shields.io/badge/QEMU-FF6600?style=flat-square" alt="Explore QEMU"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="Program 2026"></a>
 </p>
 
 <p><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 <p>
-  <a href="https://processmission-intern.github.io/mission-forge/">Website</a> ·
+  <a href="https://missionhub-oss.github.io/mfcp/">Website</a> ·
   <a href="docs/program.md">Get started</a> ·
   <a href="projects/README.md">Explore projects</a> ·
   <a href="programs/2026/README.md">Program 2026</a> ·
@@ -37,27 +39,13 @@ upstream projects. Supporting guides are currently available in Chinese.
 
 ## Getting started: your first PR
 
-Fork this repository, create a branch, and add your own identity file using the
-[registration guide](participants/README.md). Configure your Git author name
-and email before committing. Every commit and PR title uses `module: subject`.
-Every commit line must be **72 characters or fewer**, including the subject,
-body and DCO trailer. Explain the change in the body after a blank line.
+> [!IMPORTANT]
+> **Every commit must include your DCO sign-off**, confirming your right to
+> contribute the work. Use your real full name in English; for a Chinese
+> name, use the full Pinyin spelling of your real name.
 
-```text
-participants: register your-username
-
-Add my GitHub identity to join the contributor program.
-
-Signed-off-by: Your Name <your-email@example.com>
-```
-
-Replace the example identity with your own. Run `git add` for your identity file,
-then `git commit -s` to add your DCO sign-off. Push the branch to your fork and
-open a PR against this repository's `main`. Use a matching `module: subject`
-PR title. The required `Progression integrity` check validates every PR commit,
-its author sign-off and the PR title. See [commit requirements](CONTRIBUTING.md#提交格式与-dco)
-for corrections and long DCO identities. Maintainers use rebase merging to
-preserve validated commit messages.
+Fork this repository, follow the [registration guide](participants/README.md)
+to add your identity file, and open a PR against `main`.
 
 ## Explore the projects
 
@@ -81,8 +69,8 @@ Choose a project and build experience through practical contributions.
     </td>
     <td width="50%" valign="middle">
       <h3><a href="projects/linux/README.md">Linux</a></h3>
-      <p><strong>Understand the kernel through practice.</strong></p>
-      <p>Investigate issues, work on drivers, and contribute tests and documentation through the kernel community's review process.</p>
+      <p><strong>Build experience with kernels and distributions.</strong></p>
+      <p>Investigate kernel issues, work on drivers, and contribute tests and documentation. Maintain openRuyi packages and validate RISC-V systems within the Linux track.</p>
       <p><a href="projects/linux/README.md">Explore Linux →</a></p>
     </td>
   </tr>
@@ -97,6 +85,28 @@ Choose a project and build experience through practical contributions.
       <a href="projects/yocto/README.md"><img src="images/yocto.png" width="100%" alt="Yocto Project: an embedded computer and mountains inspired by the official website"></a>
     </td>
   </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/humanize/README.md"><img src="images/humanize.png" width="100%" alt="Humanize: a terminal with coding, review and verification panels"></a>
+    </td>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/humanize/README.md">Humanize</a></h3>
+      <p><strong>Build reliable coding-agent workflows.</strong></p>
+      <p>Contribute to agent workflows, CLI and desktop tools. Improve agent integrations, tests and documentation, and validate changes through upstream review.</p>
+      <p><a href="projects/humanize/README.md">Explore Humanize →</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/qemu/README.md">QEMU</a></h3>
+      <p><strong>Develop and validate virtual hardware.</strong></p>
+      <p>Work on board and SoC models, peripherals, boot flows and qtest. Contribute to processmission/qemu and participate in upstream patch review through qemu-devel.</p>
+      <p><a href="projects/qemu/README.md">Explore QEMU →</a></p>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/qemu/README.md"><img src="images/qemu.png" width="100%" alt="QEMU: an illustrated computer displaying a virtual development board with processor and peripheral components"></a>
+    </td>
+  </tr>
 </table>
 
 ## Start contributing
@@ -107,7 +117,8 @@ Choose a project and build experience through practical contributions.
 2. **Choose a project.** Read the [participation guidelines](docs/program.md),
    explore the project guides and review the
    [Program 2026](programs/2026/README.md).
-3. **Claim a task.** Find an open `kind/task` Issue by project and difficulty.
+3. **Claim a task.** Find an open Issue with native type `Task`, then filter
+   by project and difficulty.
    Comment with your experience, availability and development environment.
    After mentor confirmation, a maintainer assigns the Issue to you and records
    the agreed scope and goals. See the [claiming guide](CONTRIBUTING.md#申领任务).

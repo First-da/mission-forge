@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 # SPDX-License-Identifier: MIT
 name: mfcp-create-issue
-description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再使用仓库当前表单设置正文和标签。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
+description: 为 missionhub-oss/mfcp 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再按当前表单设置正文和标签，为实践任务设置原生 Task 类型。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
 ---
 
 # MFCP Issue 创建
 
-目标仓库为 `processmission-intern/mission-forge`，仓库数字 ID 为 `1428030862`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。技能保存在本仓库，不安装全局副本。
+目标仓库为 `missionhub-oss/mfcp`，仓库数字 ID 为 `1428030862`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。技能保存在本仓库，不安装全局副本。
 
 ## 选择入口
 
@@ -18,7 +18,7 @@ description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issu
 | 提出资料或培养流程改进 | `03-improvement.yml` |
 | 参与流程或技术求助 | `04-question.yml` |
 
-任务申领、进展、成果提交、导师评估和组织者复核使用原任务评论。读 `CONTRIBUTING.md` 确认当前要求；用户明确要求发布评论时才发送。上游缺陷按上游流程处理，MFCP 可以记录相关实践任务。请求创建独立评估 Issue 时，说明现行评论流程。
+任务申领、进展、成果提交、导师评估和组织者复核使用原任务评论，回复按 `mfcp-reply-issue` 技能保持 3 到 5 句自然语言。读 `CONTRIBUTING.md` 确认当前要求；用户明确要求发布评论时才发送。上游缺陷按上游流程处理，MFCP 可以记录相关实践任务。请求创建独立评估 Issue 时，说明现行评论流程。
 
 ## 创建任务前主动确认
 
@@ -30,10 +30,10 @@ description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issu
 
 | 信息 | 需要确认的内容 |
 | --- | --- |
-| 项目与问题 | Zephyr、Linux 或 Yocto；真实问题、上游链接及任务范围 |
+| 项目与问题 | Zephyr、Linux、Yocto、Humanize 或 QEMU；真实问题、上游链接及任务范围 |
 | 难度 | L0–L4、难度依据，以及是否还需要导师评定 |
 | 年度 | 明确的四位数字年份；是否已有对应规则和标签 |
-| 交付与验收 | 预期成果、验证方法、是否要求上游合入与 DCO 签名 |
+| 交付与验收 | 预期成果、验证方法、是否要求上游合入、作者 DCO 与独立导师配置；导师 DCO 为结算的可选签署 |
 | 实践条件 | QEMU 或真实硬件、所需知识、环境与版本约束 |
 | Mentor | 已确认的 GitHub 用户名，或明确记录待协调及所需指导 |
 | 负责人 | 开放申领，或用户明确指定的已注册成员 |
@@ -42,6 +42,26 @@ description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issu
 可以结合已核实事实给出难度建议和理由，再请用户确认。支持异步提问时，一次提出关键问题，并继续查证上游资料和重复任务；收到必要答案前保留草稿。用户选择尚未发布的年度时，说明缺少的年度规则或标签，不回退到其他年份，也不自行新建年度规则。用户明确选择“待导师评定”时保留草稿，不擅自添加难度标签。
 
 用户确认后，显式更新对应内容：项目和难度写入当前表单字段，项目、难度和年度写入标签；时间、环境、交付及验收条件写入各自字段。Mentor 未确认时如实写明待协调。只有用户明确指定负责人时才设置 Assignee，开放申领的任务保持未分配。
+
+填写 DCO 验收条件时，明确要求每个补丁提交包含作者 DCO，导师 DCO 为结算的可选签署。
+签署者使用本人真实姓名的英文全称，中文姓名使用完整拼音。通常将姓名各部分的首字母大写，
+例如 `Chao Liu`；也可以将姓氏全部大写，例如 `Chao LIU`。
+作者的签署姓名和邮箱须与 commit Author 一致。具体签署行以本人确认的
+真实姓名与邮箱，或年度 `governance.json` 中已登记的导师签署资料为依据。
+`github_login` 和命令中的账号参数填写 GitHub 用户名。
+
+涉及上游合入和经验结算时，核对所选年度生效规则的 `upstream_repositories`。
+openRuyi 任务选择 `Linux`，使用 `project/linux` 标签；`2026.v4` 接受
+`openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
+核对具体软件版本、目标体系结构、真实构建与运行证据，以及上游的 Agent 使用规则。
+Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
+`humanfia/humanize` 的 PR，`2026.v7` 起同时接受 `humanfia/flowverse` 的 flow 清单 PR。
+Sashiko 任务选择 `Linux`，`2026.v5` 接受
+`sashiko-dev/sashiko` 的 PR。新任务首次结算保存规则版本，已有任务使用已记录的版本。
+QEMU 使用 `project/qemu`，`2026.v6` 接受 `processmission/qemu` 默认分支 `devel` 的 PR。
+面向 QEMU 上游邮件列表的任务关联 `qemu-devel@nongnu.org` 和公开邮件线程，
+记录补丁版本及最终合入提交；自动结算使用已准入仓库的 GitHub PR 链接。
+成果合入后，维护者使用 `settle <上游 PR 链接>` 完成校验与结算，Bot 随后关闭 Issue。
 
 ## 读取与准备
 
@@ -59,13 +79,14 @@ ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>
 
 `--year` 使用用户确认的年份。用户明确指定负责人时添加 `--assignee 用户名`，脚本核对注册记录和 GitHub 身份。非任务表单不传 `--year`，也无需询问任务难度和年度。
 
-脚本输出 `body.md`、`issue.json` 和 `source.json`。它根据回答生成项目、难度及年度标签，检查年度规则存在、标签在目录和远端均存在，并按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；标题采用表单的 `title` 前缀。
+脚本输出 `body.md`、`issue.json` 和 `source.json`。它根据回答生成项目、难度及年度标签，为实践任务设置原生 `type: Task`，检查年度规则存在、标签在目录和远端均存在，并按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；标题采用表单的 `title` 前缀。
 
 ## 标签与权限
 
 - 创建或评论前，读取实际提交身份的 GitHub 用户名和数字 ID，检查默认分支 `participants/<小写用户名>.json` 中的登记，并核对文件内的 `github_login` 和 `github_id`。尚未登记或身份不匹配时保留草稿，指向 `participants/README.md` 的 Fork 与注册 PR 流程。使用连接工具与 CLI 时分别确认实际提交账号，避免混用身份。
 
-- 任务使用 `kind/task`、用户确认的项目标签、唯一的 `difficulty/level0` 至 `difficulty/level4` 标签及唯一的四位数字年度标签。年度须为北京时间的当前年份或未来年份，且已有对应规则与标签，不增加年度前缀。问题报告、建议和求助保留对应模板的默认标签。
+- 任务使用原生 Issue Type `Task`、用户确认的项目标签、唯一的 `difficulty/level0` 至 `difficulty/level4` 标签及唯一的四位数字年度标签。年度须为北京时间的当前年份或未来年份，且已有对应规则与标签，不增加年度前缀。问题报告、建议和求助保留对应模板的默认标签。
+- 实践任务同时设置 GitHub 原生 Issue Type 为 `Task`。通过连接工具创建时传入原生类型；工具缺少该字段时，使用保留 `issue.json` 中 `type` 字段的 GitHub REST 请求。页面统计及任务事件触发的构建以原生类型为准。
 - 难度标签必须与正文中的难度选择一致，年度必须对应已发布规则。未确认时继续询问或保留草稿。发布前确认提交身份能够设置所选标签；权限不足时保留准备结果并说明需要维护者设置的内容。
 - 指定 Assignee 时确认用户明确授权、该成员已注册且 GitHub 接受该分配；不推断负责人、Mentor 授权、Milestone 或其他标签。
 - 正文填写 Mentor 用户名仅记录协作安排。用户明确要求正式配置 Mentor 时，再按 `docs/bot-command-examples.md` 检查权限并发送命令，核对 Bot 的结果回复。
@@ -76,6 +97,6 @@ ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>
 1. 审阅 `body.md`：字段顺序与表单一致，标题具体，事实有依据，公开内容不含凭据、私人联系方式或薪酬协议。脚本的格式校验不能代替事实核对。
 2. 发布前重新核对北京时间的当前年份，拒绝所选年度已经早于当前年份的草稿；检查当前默认分支的表单和标签目录与 `source.json` 记录的版本是否一致，并核对所选年度规则及远端标签仍存在。若内容改变，重新准备草稿并检查新增必填条件；其他无关文件的更新无需重新准备。
 3. 再次查询近期相关 Issue。存在等价记录时向用户返回该记录，保留当前草稿；用户明确要求独立事项时按其范围处理。
-4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `processmission-intern/mission-forge`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/processmission-intern/mission-forge/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
+4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `missionhub-oss/mfcp`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/missionhub-oss/mfcp/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
 5. 创建请求超时或返回结果不明时，先查询当前用户近期创建的 Issue，核对标题和完整正文。找到匹配项就读取并返回它；结果仍不明时停止自动重试，说明状态与草稿位置，避免重复发布。
-6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、项目、难度、年度标签和 Assignee，返回真实链接。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。
+6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、原生 `type.name`、项目、难度、年度标签和 Assignee，返回真实链接。实践任务须确认 `type.name` 为 `Task`；GitHub 可能忽略权限不足的类型设置，应由有权限的维护者补设，类型设置完成后自动构建页面。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。

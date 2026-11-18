@@ -1,22 +1,24 @@
 <div align="center">
 
 <p><sub>进程使命 · 开源社区</sub></p>
-<h1>Mission Forge Contributor Program（MFCP）</h1>
+<h1>MFCP 开源人才培养计划</h1>
 <p>
   <strong>学习 · 实践 · 贡献 · 成长</strong><br>
-  进程使命开源贡献者成长计划，通过真实开源贡献积累工程经验。
+  MFCP 开源人才培养计划，通过真实开源贡献积累工程经验。
 </p>
 
 <p>
   <a href="projects/zephyr/README.md"><img src="https://img.shields.io/badge/Zephyr-7A51C2?style=flat-square" alt="探索 Zephyr"></a>
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="探索 Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="探索 Yocto"></a>
+  <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="探索 Humanize"></a>
+  <a href="projects/qemu/README.md"><img src="https://img.shields.io/badge/QEMU-FF6600?style=flat-square" alt="探索 QEMU"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="2026 年培养安排"></a>
 </p>
 
 <p><a href="README.md">English</a> · <strong>简体中文</strong></p>
 <p>
-  <a href="https://processmission-intern.github.io/mission-forge/">计划网站</a> ·
+  <a href="https://missionhub-oss.github.io/mfcp/">计划网站</a> ·
   <a href="docs/program.md">开始参与</a> ·
   <a href="projects/README.md">探索项目</a> ·
   <a href="programs/2026/README.md">2026 年培养安排</a> ·
@@ -33,6 +35,14 @@ MFCP 由<strong>进程使命（Process Mission）</strong>发起，通过开源�
 
 ## 开始参与：提交第一个 PR
 
+> [!IMPORTANT]
+> **DCO 必须使用本人真实姓名的英文全称。** 中文姓名使用本人真实姓名的
+> 完整拼音。通常将姓名各部分的首字母大写，例如 `Chao Liu`；也可以将
+> 姓氏全部大写，例如 `Chao LIU`。
+> Git `user.name`、commit 作者姓名和
+> `Signed-off-by` 中的姓名须一致。GitHub 用户名、昵称和代号不能代替本人
+> 真实姓名。签署邮箱须与 commit 作者邮箱一致。
+
 Fork 本仓库并创建分支，按[注册说明](participants/README.md)添加本人身份文件。
 提交前配置本人的 Git 姓名和邮箱。每个 commit 和 PR 标题使用
 `module: subject` 格式；commit 标题、正文和 DCO 的每行均不得超过 **72 个字符**。
@@ -43,10 +53,14 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Name <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-将示例身份替换为本人信息。使用 `git add` 暂存身份文件，运行
+将示例姓名替换为本人真实姓名的英文全称，中文姓名使用完整拼音。通常将
+姓名各部分的首字母大写，例如 `Chao Liu`；也可以将姓氏全部大写，例如
+`Chao LIU`。邮箱填写本人提交使用的邮箱。
+身份文件中的 `github_login` 填写 GitHub 用户名。
+使用 `git add` 暂存身份文件，运行
 `git commit -s` 添加本人 DCO 签署，再推送到个人 Fork，向本仓库 `main`
 提交 PR。PR 标题也使用 `module: subject`。
 必过的 `Progression integrity` 检查会逐个验证 PR 中的 commit、作者 DCO
@@ -75,8 +89,8 @@ Signed-off-by: Your Name <your-email@example.com>
     </td>
     <td width="50%" valign="middle">
       <h3><a href="projects/linux/README.md">Linux</a></h3>
-      <p><strong>通过实践理解内核。</strong></p>
-      <p>分析实际问题，参与驱动开发，完善测试与文档，并按照内核社区的流程参与评审。</p>
+      <p><strong>参与内核与发行版开发。</strong></p>
+      <p>分析内核问题，参与驱动开发，完善测试与文档。Linux 方向同时支持 openRuyi 软件包维护和 RISC-V 系统验证。</p>
       <p><a href="projects/linux/README.md">探索 Linux →</a></p>
     </td>
   </tr>
@@ -91,13 +105,35 @@ Signed-off-by: Your Name <your-email@example.com>
       <a href="projects/yocto/README.md"><img src="images/yocto.png" width="100%" alt="Yocto Project：参考官网蓝色山峦横幅绘制的嵌入式设备插图"></a>
     </td>
   </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/humanize/README.md"><img src="images/humanize.png" width="100%" alt="Humanize：终端与编程、审查、验证面板的立体插图"></a>
+    </td>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/humanize/README.md">Humanize</a></h3>
+      <p><strong>参与编程 Agent 协作工具的开发。</strong></p>
+      <p>围绕协作流程、命令行和桌面工具开展实践，改进 Agent 接入、测试与文档，并按上游流程验证和提交成果。</p>
+      <p><a href="projects/humanize/README.md">探索 Humanize →</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/qemu/README.md">QEMU</a></h3>
+      <p><strong>开发并验证虚拟硬件。</strong></p>
+      <p>围绕板级与 SoC 模型、外设、启动流程和 qtest 开展实践，向 processmission/qemu 提交贡献，并通过 qemu-devel 参与上游补丁评审。</p>
+      <p><a href="projects/qemu/README.md">探索 QEMU →</a></p>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/qemu/README.md"><img src="images/qemu.png" width="100%" alt="QEMU：电脑屏幕中的虚拟开发板，以及处理器和外设组件插图"></a>
+    </td>
+  </tr>
 </table>
 
 ## 开始参与贡献
 
 1. **通过 PR 注册。** Fork 本仓库，在 [`participants/`](participants/README.md) 添加本人 GitHub 身份文件并提交注册 PR，经过维护者审核合并后获得参与资格。
 2. **选择实践项目。** 阅读项目资料，查看 [2026 年培养安排](programs/2026/README.md)。
-3. **申领实践任务。** 按项目和难度筛选开放的 `kind/task` Issue，在评论中说明经验、可参与时间与开发条件。导师确认后，维护者设置 Assignee，并记录约定范围与目标。操作步骤见[申领指南](CONTRIBUTING.md#申领任务)。
+3. **申领实践任务。** 选择原生 Type 为 `Task` 的开放 Issue，再按项目和难度筛选，在评论中说明经验、可参与时间与开发条件。导师确认后，维护者设置 Assignee，并记录约定范围与目标。操作步骤见[申领指南](CONTRIBUTING.md#申领任务)。
 4. **完成实践并提交证据。** 记录实际验证结果，提供上游贡献链接，参与评审与成果评估。
 
 未注册账号创建的 Issue 会自动关闭，其 Issue 评论会自动删除；PR 讨论保持开放。自动处理在提交后执行，内容可能短暂可见。注册是参与前置条件，贡献者等级按任务成果评估。

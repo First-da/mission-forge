@@ -11,6 +11,13 @@ const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
 
+function openEventsFromHash() {
+  if (document.body.dataset.page === 'home' && location.hash === '#events') {
+    location.replace(new URL('events/', location.href));
+  }
+}
+window.addEventListener('hashchange', openEventsFromHash);
+
 function setLanguage(next) {
   language = next === 'en' ? 'en' : 'zh';
   document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
@@ -30,11 +37,20 @@ function setLanguage(next) {
   document.title = copy['meta.title'][language];
   document.querySelector('meta[name="description"]').content = copy['meta.description'][language];
   languageButton.textContent = language === 'en' ? '中文' : 'English';
+  document.querySelectorAll('[data-ghfind-image]').forEach(img => {
+    const url = new URL(img.src);
+    if (url.searchParams.get('lang') === language) return;
+    url.searchParams.set('lang', language);
+    img.hidden = false;
+    img.parentElement.querySelector('.ghfind-image-fallback').hidden = true;
+    img.src = url.href;
+  });
   try {localStorage.setItem('mfcp.language', language);} catch {}
   renderContributors();
 }
 
 function renderContributors() {
+  if (!search) return;
   const query = search.value.trim().toLowerCase();
   const matches = cards.filter(card => card.dataset.login.includes(query));
   const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
@@ -58,13 +74,13 @@ function changePage(delta) {
 }
 
 languageButton.addEventListener('click', () => setLanguage(language === 'en' ? 'zh' : 'en'));
-search.addEventListener('input', () => {
+search?.addEventListener('input', () => {
   currentPage = 1;
   renderContributors();
 });
-previousPage.addEventListener('click', () => changePage(-1));
-nextPage.addEventListener('click', () => changePage(1));
-document.getElementById('clear-filters').addEventListener('click', () => {
+previousPage?.addEventListener('click', () => changePage(-1));
+nextPage?.addEventListener('click', () => changePage(1));
+document.getElementById('clear-filters')?.addEventListener('click', () => {
   search.value = '';
   currentPage = 1;
   renderContributors();
@@ -80,6 +96,16 @@ document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('
   document.documentElement.classList.remove('menu-open');
 }));
 document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => {img.hidden = true;}));
+document.querySelectorAll('[data-ghfind-image]').forEach(img => {
+  const updateImage = () => {
+    const failed = img.complete && img.naturalWidth === 0;
+    img.hidden = failed;
+    img.parentElement.querySelector('.ghfind-image-fallback').hidden = !failed;
+  };
+  img.addEventListener('load', updateImage);
+  img.addEventListener('error', updateImage);
+  if (img.complete) updateImage();
+});
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') {
     menuButton.setAttribute('aria-expanded', 'false');
@@ -88,48 +114,51 @@ document.addEventListener('keydown', event => {
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
+openEventsFromHash();
 document.documentElement.dataset.enhanced = 'true';
 
 const art = document.querySelector('.forge-art');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-let artVisible = true;
-let pointerFrame = null;
-let pointerX = 0;
-let pointerY = 0;
-function resetTilt() {
-  if (pointerFrame !== null) cancelAnimationFrame(pointerFrame);
-  pointerFrame = null;
-  art.style.removeProperty('--tilt-x');
-  art.style.removeProperty('--tilt-y');
-}
-function updateMotion() {
-  const paused = document.hidden || !artVisible || reducedMotion.matches;
-  art.classList.toggle('motion-paused', paused);
-  if (paused) resetTilt();
-}
-new IntersectionObserver(([entry]) => {
-  artVisible = entry.isIntersecting;
-  updateMotion();
-}).observe(art);
-document.addEventListener('visibilitychange', updateMotion);
-reducedMotion.addEventListener('change', updateMotion);
-art.addEventListener('pointermove', event => {
-  if (event.pointerType !== 'mouse' || reducedMotion.matches || !artVisible) return;
-  pointerX = event.clientX;
-  pointerY = event.clientY;
-  if (pointerFrame !== null) return;
-  pointerFrame = requestAnimationFrame(() => {
+if (art) {
+  let artVisible = true;
+  let pointerFrame = null;
+  let pointerX = 0;
+  let pointerY = 0;
+  function resetTilt() {
+    if (pointerFrame !== null) cancelAnimationFrame(pointerFrame);
     pointerFrame = null;
-    const bounds = art.getBoundingClientRect();
-    const x = Math.max(-1, Math.min(1, (pointerX - bounds.left) / bounds.width * 2 - 1));
-    const y = Math.max(-1, Math.min(1, (pointerY - bounds.top) / bounds.height * 2 - 1));
-    art.style.setProperty('--tilt-x', `${(-y * 4).toFixed(2)}deg`);
-    art.style.setProperty('--tilt-y', `${(x * 4).toFixed(2)}deg`);
+    art.style.removeProperty('--tilt-x');
+    art.style.removeProperty('--tilt-y');
+  }
+  function updateMotion() {
+    const paused = document.hidden || !artVisible || reducedMotion.matches;
+    art.classList.toggle('motion-paused', paused);
+    if (paused) resetTilt();
+  }
+  new IntersectionObserver(([entry]) => {
+    artVisible = entry.isIntersecting;
+    updateMotion();
+  }).observe(art);
+  document.addEventListener('visibilitychange', updateMotion);
+  reducedMotion.addEventListener('change', updateMotion);
+  art.addEventListener('pointermove', event => {
+    if (event.pointerType !== 'mouse' || reducedMotion.matches || !artVisible) return;
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+    if (pointerFrame !== null) return;
+    pointerFrame = requestAnimationFrame(() => {
+      pointerFrame = null;
+      const bounds = art.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (pointerX - bounds.left) / bounds.width * 2 - 1));
+      const y = Math.max(-1, Math.min(1, (pointerY - bounds.top) / bounds.height * 2 - 1));
+      art.style.setProperty('--tilt-x', `${(-y * 4).toFixed(2)}deg`);
+      art.style.setProperty('--tilt-y', `${(x * 4).toFixed(2)}deg`);
+    });
   });
-});
-art.addEventListener('pointerleave', resetTilt);
-art.addEventListener('pointercancel', resetTilt);
-updateMotion();
+  art.addEventListener('pointerleave', resetTilt);
+  art.addEventListener('pointercancel', resetTilt);
+  updateMotion();
+}
 
 if (!reducedMotion.matches) {
   const revealObserver = new IntersectionObserver(entries => {

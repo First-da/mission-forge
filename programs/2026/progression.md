@@ -3,33 +3,49 @@
 
 # 2026 年贡献者晋级规则
 
-当前规则版本为 `2026.v2`，机器读取的数量与积分条件保存在
-[rules/v2.json](rules/v2.json)。`2026.v1` 保留用于已记录的任务合同和晋级记录。
+当前规则版本为 `2026.v7`，机器读取的数量与积分条件保存在
+[rules/v7.json](rules/v7.json)。`2026.v1` 至 `2026.v6` 保留用于已记录的任务合同和晋级记录。
 每条晋级记录保存规则版本及文件 SHA。
 
 任务通过 `2026` 标签选择本年度规则，通过 `difficulty/level0` 至
 `difficulty/level4` 标签选择难度，并通过唯一 Assignee 分配负责人。
-Mentor 指定、阶段验收和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
+Mentor 指定和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
 
 ## 实践项目与上游仓库
 
-2026.v2 支持 Zephyr、Linux 和 Yocto 三个实践方向。任务成果需要合入
-下列 GitHub 仓库之一；结算时按任务接受时生效的规则版本核对仓库。
+2026.v7 支持 Zephyr、Linux、Yocto、Humanize 和 QEMU 五个实践方向。自动结算的任务成果需要合入
+下列 GitHub 仓库之一；结算时按任务记录中的规则版本核对仓库。
 
 | 项目 | 上游仓库 |
 | --- | --- |
 | Zephyr | `zephyrproject-rtos/zephyr` |
-| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs` |
+| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs`、`openRuyi-Project/openRuyi`、`openRuyi-Project/homepage`、`sashiko-dev/sashiko` |
 | Yocto | `yoctoproject/poky`、`openembedded/openembedded-core`、`openembedded/meta-openembedded` |
+| Humanize | `humanfia/humanize`、`humanfia/flowverse` |
+| QEMU | `processmission/qemu` |
 
-ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用邮件补丁
-流程；`upstream_acceptance` 仍为 `github_pr`，这些流程的结算方式在后续
-规则版本中补充。
+openRuyi 的软件包维护、系统验证和文档任务归入 Linux，使用原生 Type `Task`、
+`project/linux`、`2026` 和已确认的难度标签。其上游目标分别为
+`openRuyi-Project/openRuyi` 和 `openRuyi-Project/homepage`。
+Humanize 任务使用 `project/humanize` 标签。工作负载 flow 的成果通过
+`humanfia/flowverse` 的清单 PR 结算，清单固定 flow 仓库的提交；flow 仓库需要公开且包含可复现的测试与示例产物。
+Sashiko 的 Linux 内核评审资料与工具任务归入 Linux，使用 `project/linux`。
+QEMU 任务使用 `project/qemu`，GitHub PR 提交到 `processmission/qemu` 的默认分支 `devel`。
+新任务首次结算按命令发生时间选择生效规则；`2026.v7` 自北京时间 2026 年 11 月 13 日
+15:40:00 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
+上游 PR 需要合入默认分支，每个补丁提交包含可核实的作者 DCO。
+导师 DCO 为可选签署，结算核对导师配置授权和当前成员资格。
+
+ELISA 仓库当前归入 Linux 方向。QEMU 上游通过
+[`qemu-devel@nongnu.org`](https://lists.nongnu.org/mailman/listinfo/qemu-devel)
+接收补丁，贡献者在任务中记录[公开邮件线程](https://lore.kernel.org/qemu-devel/)
+和最终合入提交。Linux 内核、部分 Yocto 仓库及 QEMU 上游的邮件补丁用于记录实践与评审成果；
+本年度自动结算的 `upstream_acceptance` 为 `github_pr`，结算输入为上述准入仓库的 GitHub PR 链接。
 
 ## L0 → L1
 
 1. Fork 本仓库。
-2. 从本人的 Fork 提交注册 PR，登记本人 GitHub 数字 ID 和用户名。
+2. 从本人的 Fork 提交注册 PR，登记本人 GitHub 数字 ID 和用户名，并以本人真实姓名的英文全称签署 DCO，中文姓名使用完整拼音；通常将姓名各部分的首字母大写，也可以将姓氏全部大写。
 3. 通过 JSON 格式与身份校验，由维护者审核并合入默认分支。
 
 完成上述条件后，Bot 直接更新个人 JSON，记录 L1 等级、注册 PR 和
@@ -47,7 +63,15 @@ ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用
 
 任务难度 L0、L1、L2、L3、L4 分别计 0、10、30、60、100 分。
 成果完成验收并合入上游后结算。注册晋级与任务验收分别记录，任务的
-导师验收及作者、导师 DCO 签名要求按任务合同执行。
+导师验收按任务合同执行；每个补丁提交须包含作者 DCO，导师 DCO 为可选签署。
+签署者使用本人真实姓名的英文全称，中文姓名使用完整拼音。通常将姓名各部分的
+首字母大写，也可以将姓氏全部大写；
+作者的签署姓名和邮箱与提交作者一致。
+
+维护者审核成果后，在任务中发表 `@mfcp-progress settle <上游 PR 链接>`。
+Bot 直接核对负责人、标签、导师配置、上游合入、作者 DCO 和重复计分。
+验证通过并写入结算记录后，Bot 自动将 Issue 关闭为 Completed。已手动关闭为
+Completed 的任务也使用同一命令结算。上游 PR、作者签署和导师配置授权是结算证据。
 
 ## L2 → L3
 
@@ -55,12 +79,24 @@ ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用
 其中至少 6 个任务达到 L2 或以上难度，至少 2 个达到 L3 或以上难度。
 此外必须通过技术面试、导师能力评估及内部审核。导师与面试人员由不同
 人员担任，晋级 PR 由两名独立授权审核人员批准后合入。
+达到 L3 后可以担任 MFCP 项目导师，导师授权通过 Mentors Team 成员身份执行。
 
 ## L3 → L4
 
-采用邀请与推荐制度。至少两名独立 L3 或 L4 贡献者提供推荐，说明候选人
-的社区贡献、指导新人经历及公开反馈。导师评估和内部审核通过后，
-晋级 PR 由两名独立授权审核人员批准后合入。
+L4 面向在某个领域具有公开影响力的贡献者（KOL）。候选人需要满足：
+
+- 持续参与上游项目，承担模块维护、版本验证或社区协作职责。
+- 在该领域有公开可核实的成果，例如上游维护者身份、标准或规范参与、会议演讲、论文、代表性项目。
+- 至少两名独立 L3 或 L4 贡献者提供推荐，说明社区贡献、指导新人经历及公开反馈。
+
+导师评估和内部审核通过后，晋级 PR 由两名独立授权审核人员批准后合入。
+
+## 认定积分
+
+对在某个领域已有公开影响力的贡献者，年度维护者可以用公开评论记录认定决定，
+并通过参与者记录 PR 追加 `recognitions` 与晋级记录。认定评论写明对象、等级、
+经验值与依据，记录保存评论作者、时间与摘要。L3 认定不低于 300 分，L4 认定
+不低于 600 分。认定积分计入累计经验值，后续任务结算保留认定记录。
 
 ## 记录与撤销
 
@@ -70,20 +106,23 @@ L0–L2 的正向经验结算及 L0 → L1、L1 → L2 晋级直接更新默认�
 已结算任务重新打开时，Bot 提交撤销 PR，批准合入后扣除该次结算的原始
 经验值和对应成果数量，同时保留历史。经验撤销不自动降低已获等级。
 
-Mentor 资格由 [Mentors Team](https://github.com/orgs/processmission-intern/teams/mentors)
+Mentor 资格由 [Mentors Team](https://github.com/orgs/missionhub-oss/teams/mentors)
 的有效成员身份确定，Bot 在执行命令和核对审核时查询。其他账号的 Bot
 命令不生效，查询失败时停止操作。
 [governance.json](governance.json) 保存年度维护者、审核人员、面试人员及
-导师 DCO 签名资料。L0 → L1 晋级始终按注册条件执行。
+导师本人确认的真实姓名及 DCO 签署邮箱。登记姓名使用英文全称，中文姓名
+使用完整拼音；通常将姓名各部分的首字母大写，也可以将姓氏全部大写。
+L0 → L1 晋级始终按注册条件执行。
 
 ## 成果与晋级通知
 
-任务经验结算成功写入默认分支后，Bot 在原任务 Issue 中使用英文发表评论，
+任务经验结算成功写入默认分支并关闭后，Bot 在原任务 Issue 中使用英文发表评论，
 @贡献者并祝贺其完成任务，列出本次经验值和任务难度。
 本次结算同时触发晋级时，Bot 额外发表晋级祝贺，写明原等级和新等级。
 L0 → L1 的晋级祝贺回复到本人的注册 PR。
 
 通知读取默认分支中已生效的个人记录。待审晋级和撤销不触发祝贺。
 每条结算和晋级记录分别生成固定通知标识，Bot 检查自己已发表的评论，
-避免正常重试重复 @用户。通知失败后，每小时检查一次并补发缺失通知。
+避免正常重试重复 @用户。记录更新与 Issue 关闭都会触发通知检查；通知失败后，
+每小时检查一次并补发缺失通知。
 所有通知通过同一个串行工作流发送；用户的邮件接收方式由 GitHub 通知设置决定。

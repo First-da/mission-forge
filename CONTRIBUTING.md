@@ -11,6 +11,16 @@
 
 ## 提交格式与 DCO
 
+**补丁作者必须使用本人真实姓名的英文全称签署 DCO。** 中文姓名使用
+本人真实姓名的完整拼音。通常将姓名各部分的首字母大写，例如 `Chao Liu`；
+也可以将姓氏全部大写，例如 `Chao LIU`。
+作者的 Git `user.name`、
+commit 的 `Author` 姓名和作者 `Signed-off-by` 中的姓名须一致；
+作者的签署邮箱须与该 commit 的作者邮箱一致。`settle` 将导师 DCO 视为可选签署；
+导师配置与验收职责仍按任务规则核验。导师追加签署时填写导师本人的
+真实姓名与邮箱，并与年度登记的导师签署资料一致。GitHub 用户名、昵称和代号
+不能代替个人真实姓名。身份文件中的 `github_login` 填写 GitHub 用户名。
+
 所有 commit 及 PR 标题使用 `module: subject`。module 使用小写字母开头，
 可以包含小写字母、数字、`/` 和 `-`，例如 `participants`、`docs`、`ci`。
 subject 简洁说明修改。标题与正文之间空一行，正文说明具体修改和目的，
@@ -21,21 +31,32 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Name <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-配置本人 `git config user.name` 和 `git config user.email`，使用
-`git commit -s` 添加自己的 DCO。签署邮箱必须与该 commit 的作者邮箱一致。
+将示例中的姓名替换为本人真实姓名的英文全称，中文姓名使用完整拼音。
+通常将姓名各部分的首字母大写，也可以将姓氏全部大写；邮箱填写本人提交
+使用的邮箱。在当前仓库配置：
+
+```sh
+git config user.name "Your Real Full Name"
+git config user.email "your-email@example.com"
+```
+
+提交前使用 `git var GIT_AUTHOR_IDENT` 核对实际作者姓名和邮箱，使用
+`git commit -s` 添加自己的 DCO，并用 `git log -1 --format=full` 检查提交结果。
 签署者须本人确认 [Developer Certificate of Origin](https://developercertificate.org/)
 声明，不能由维护者代签其他作者。DCO 表明贡献者确认有权提交这些内容。
 
 姓名和邮箱较长时，Git 支持将邮箱放在以一个空格开头的续行：
 
 ```text
-Signed-off-by: Your Name
+Signed-off-by: Your Real Full Name
  <your-email@example.com>
 ```
 
+提交者确认姓名真实，维护者审核时核对英文全称或完整拼音、姓名大小写格式，
+以及作者与签署信息的一致性。
 CI 使用 Git 解析签署，逐行检查 72 字符限制；每个 commit 都需要解释正文
 和作者本人的签署。检查覆盖 PR 全部提交，包括合并提交和 Bot 提交。
 PR 修改代码作为数据读取，校验程序来自默认分支。
@@ -57,38 +78,39 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 
 ## 提出任务
 
-通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
+通过[新建 Issue](https://github.com/missionhub-oss/mfcp/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
 
-- 项目方向：Zephyr、Linux 或 Yocto。
+- 项目方向：Zephyr、Linux、Yocto、Humanize 或 QEMU；openRuyi 的软件包、系统验证与文档任务选择 Linux。
 - 问题背景：实际需求、已有问题链接和相关技术资料。
 - 任务目标：需要实现的行为、涉及的范围和交付内容。
 - 实践条件：所需知识、设备、开发环境和上游版本。
 - 验收条件：运行步骤、预期结果和需要提交的验证证据。
 - 协作安排：参与者、导师及计划时间；尚未确定的信息标记为待确认。
 
+实践任务使用 GitHub 原生 Type `Task`。任务模板和创建脚本会填写该类型，
+创建后请核对 Issue 侧边栏的 Type。类型设置完成后，新建任务、分配或取消
+负责人会自动触发网站构建和发布。
+
 开始任务前，由参与者与导师在 Issue 中确认范围和验收条件。
 
 ## 申领任务
 
-1. 在开放的 Issue 中按 `kind/task`、项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选任务，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
+1. 在开放的 Issue 中选择原生 Type 为 `Task` 的任务，再按项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
 3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
-4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次验收时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
+4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次结算时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
+
+任务创建后超过 30 天仍没有 Assignee 时，Bot 会自动关闭该任务；需要继续时，在原任务评论说明原因并重新分配。
 
 Mentor 没有设置 Assignee 的仓库权限时，可以发表
 `@mfcp-progress configure assignee @参与者用户名`，由 Bot 分配已注册且
 参与过该 Issue 讨论的成员。命令作者需要属于 Mentors Team。
 
-```markdown
-### Participation request / 参与申请
-- Relevant experience / 相关经验：
-- Available time / 可参与时间：
-- Development environment / 开发条件：
-- Task understanding / 对任务的理解：
-- Guidance needed / 需要的指导：
-```
+参与申请用 3 到 5 句话说明相关经验、可参与时间、对任务的理解和需要的帮助。例如：
+
+> 我做嵌入式仿真一年多，熟悉 Rockchip 板级资料，每周能投入 10 小时。想先补文档的映射表，再跑 qtest。需要确认 TRM 版本和 rock-5b-plus 的范围。
 
 导师与维护者在评论中确认任务范围、验收条件、沟通安排和参与申请链接。
 负责人以 Assignee 为准，难度和年度以标签为准，Mentor 通过 `configure`
@@ -106,8 +128,10 @@ Mentor 没有设置 Assignee 的仓库权限时，可以发表
 
 提交公开记录前，检查其中的个人信息、访问凭据和内部资料。薪酬协议及个人联系方式通过组织者指定的私有渠道处理。
 
-进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中，使用[任务评论模板](docs/task-comments.md)。维护者在任务正文维护最新进展和评估评论链接。阶段评估通过后继续执行任务，最终验收与组织者复核通过后关闭任务。
+进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中。默认用 3 到 5 句自然语言写，参考[任务评论示例](docs/task-comments.md)，不需要逐项填写。维护者在任务正文维护最新进展和评估评论链接。成果审核并合入上游后，维护者发送 `@mfcp-progress settle <上游 PR 链接>`，Bot 校验、结算并自动关闭任务，再回复贡献者的完成祝贺；同时晋级时另发晋级祝贺。
 
 ## 更新培养记录
 
 项目长期资料放入 `projects/<project>/`，每期安排与成果放入 `programs/<year>/`。每期记录引用项目资料，标注评估日期和贡献当时的状态。
+
+新增贡献项目时，按[项目接入清单](docs/project-setup.md)同步维护项目资料、页面入口、任务表单、标签、创建技能及年度上游仓库规则。
